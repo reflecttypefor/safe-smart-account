@@ -101,6 +101,26 @@ describe("Safe", () => {
         });
     });
 
+    describe("buildSignatureBytes", () => {
+        it("should not mutate signature order", () => {
+            const signatures = [
+                {
+                    signer: "0x0000000000000000000000000000000000000002",
+                    data: `0x${"22".repeat(65)}`,
+                },
+                {
+                    signer: "0x0000000000000000000000000000000000000001",
+                    data: `0x${"11".repeat(65)}`,
+                },
+            ];
+            const signerOrder = signatures.map(({ signer }) => signer);
+
+            buildSignatureBytes(signatures);
+
+            expect(signatures.map(({ signer }) => signer)).to.deep.eq(signerOrder);
+        });
+    });
+
     describe("execTransaction", () => {
         it("should fail if signature points into static part", async () => {
             const {
